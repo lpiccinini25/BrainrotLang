@@ -1,13 +1,18 @@
+// FizzBuzz in Brainrot
+
 cook fizzBuzz(limit: sigma) {
     grind i with 1...limit {
         vibe_check i % 15 == 0 {
-            yap("FizzBuzz);
+            yap("FizzBuzz");
         } caught_lackin vibe_check i % 5 == 0 {
             yap("Buzz");
         } caught_lackin vibe_check i % 3 == 0 {
             yap("Fizz");
-        } else {
+        } caught_lackin {
             yap(i);
         }
     }
 }
+
+// Call the function to print FizzBuzz up to 100
+fizzBuzz(100);

@@ -1,0 +1,28 @@
+aura Point {
+  x: sigma,
+  y: sigma
+}
+
+cook distance_from_origin(p: Point): sigma {
+  it_gave (p.x ** 2.0 + p.y ** 2.0) ** 0.5;
+}
+
+lowkey my_point = spawn Point(3.0, 4.0);
+lowkey dist = distance_from_origin(my_point);
+
+yap("Point x: ");
+yap(my_point.x);
+yap("Point y: ");
+yap(my_point.y);
+yap("Distance from origin: ");
+yap(dist);
+
+// Using Optionals with Auras
+lowkey maybe_point = mid Point;
+vibe_check maybe_point == mid Point {
+  yap("Initial maybe_point is mid (null)");
+}
+
+maybe_point = some my_point;
+yap("Field access via optional chaining: ");
+yap(maybe_point?.x ?? 0.0);

@@ -1,465 +1,392 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2869
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red183\green111\blue179;\red24\green24\blue24;\red193\green193\blue193;
-\red70\green137\blue204;\red140\green211\blue254;\red194\green126\blue101;\red89\green138\blue67;\red67\green192\blue160;
-\red202\green202\blue202;\red212\green214\blue154;\red66\green179\blue255;\red205\green173\blue106;\red167\green197\blue152;
-}
-{\*\expandedcolortbl;;\cssrgb\c77255\c52549\c75294;\cssrgb\c12157\c12157\c12157;\cssrgb\c80000\c80000\c80000;
-\cssrgb\c33725\c61176\c83922;\cssrgb\c61176\c86275\c99608;\cssrgb\c80784\c56863\c47059;\cssrgb\c41569\c60000\c33333;\cssrgb\c30588\c78824\c69020;
-\cssrgb\c83137\c83137\c83137;\cssrgb\c86275\c86275\c66667;\cssrgb\c30980\c75686\c100000;\cssrgb\c84314\c72941\c49020;\cssrgb\c70980\c80784\c65882;
-}
-\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\deftab720
-\pard\pardeftab720\partightenfactor0
+import * as ohm from "ohm-js";
 
-\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 import\cf4 \strokec4  \cf5 \strokec5 *\cf4 \strokec4  \cf2 \strokec2 as\cf4 \strokec4  \cf6 \strokec6 ohm\cf4 \strokec4  \cf2 \strokec2 from\cf4 \strokec4  \cf7 \strokec7 "ohm-js"\cf4 \strokec4 ;\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // 1. ABSTRACT SYNTAX TREE (AST) CLASSES\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 Program\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 statements\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 statements\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 statements\cf4 \strokec4 ;\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 VariableDeclaration\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 modifier\cf4 \strokec4 , \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 initializer\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 modifier\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 modifier\cf4 \strokec4 ; \cf8 \strokec8 // "let" or "const"\cf4 \cb1 \strokec4 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 id\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 id\cf4 \strokec4 ;\cb1 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 initializer\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 initializer\cf4 \strokec4 ;\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 StructDeclaration\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 fields\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 fields\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 Field\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 FunctionDeclaration\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 params\cf4 \strokec4 , \cf6 \strokec6 returnType\cf4 \strokec4 , \cf6 \strokec6 body\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 params\cf4 \strokec4 , \cf6 \strokec6 returnType\cf4 \strokec4 , \cf6 \strokec6 body\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 Parameter\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 TypeNode\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf8 \strokec8 // Can represent simple types, arrays, optionals, or functions depending on properties\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 description\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \cf6 \strokec6 description\cf4 \strokec4 );\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 Assignment\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 target\cf4 \strokec4 , \cf6 \strokec6 source\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 target\cf4 \strokec4 , \cf6 \strokec6 source\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 CallStatement\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 callExp\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 callExp\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 callExp\cf4 \strokec4 ;\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 ReturnStatement\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 expression\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 expression\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 expression\cf4 \strokec4 ;\cb1 \
-\cb3   \} \cf8 \strokec8 // null if short return\cf4 \cb1 \strokec4 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 IfStatement\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 consequent\cf4 \strokec4 , \cf6 \strokec6 alternate\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 consequent\cf4 \strokec4 , \cf6 \strokec6 alternate\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 WhileStatement\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 body\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 body\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 BinaryExpression\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 left\cf4 \strokec4 , \cf6 \strokec6 right\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 left\cf4 \strokec4 , \cf6 \strokec6 right\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 UnaryExpression\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 operand\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 operand\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 CallExpression\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 callee\cf4 \strokec4 , \cf6 \strokec6 args\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 callee\cf4 \strokec4 , \cf6 \strokec6 args\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 SubscriptExpression\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 array\cf4 \strokec4 , \cf6 \strokec6 index\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 array\cf4 \strokec4 , \cf6 \strokec6 index\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 MemberExpression\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 object\cf4 \strokec4 , \cf6 \strokec6 isOptional\cf4 \strokec4 , \cf6 \strokec6 field\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 object\cf4 \strokec4 , \cf6 \strokec6 isOptional\cf4 \strokec4 , \cf6 \strokec6 field\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 Literal\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 type\cf4 \strokec4 , \cf6 \strokec6 value\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf9 \strokec9 Object\cf4 \strokec4 .\cf11 \strokec11 assign\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 , \{ \cf6 \strokec6 type\cf4 \strokec4 , \cf6 \strokec6 value\cf4 \strokec4  \});\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 class\cf4 \strokec4  \cf9 \strokec9 Identifier\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 constructor\cf4 \strokec4 (\cf6 \strokec6 name\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 name\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 name\cf4 \strokec4 ;\cb1 \
-\cb3   \}\cb1 \
-\cb3 \}\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // 2. OHM GRAMMAR (Paste your grammar string here)\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 const\cf4 \strokec4  \cf12 \strokec12 carlosGrammar\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 ohm\cf4 \strokec4 .\cf11 \strokec11 grammar\cf4 \strokec4 (\cf7 \strokec7 `\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf7 \cb3 \strokec7   Carlos \{\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Program     = Statement+\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Statement   = VarDecl\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | TypeDecl\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | FunDecl\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9 ("++" | "--") ";"                        --bump\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9 "=" Exp ";"                              --assign\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9_call ";"                                 --call\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | break ";"                                     --break\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | return Exp ";"                                --return\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | return ";"                                    --shortreturn\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | IfStmt\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | LoopStmt\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     VarDecl     = (let | const) id "=" Exp ";"\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     TypeDecl    = struct id "\{" Field* "\}"\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Field       = id ":" Type\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     FunDecl     = function id Params (":" Type)? Block\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Params      = "(" ListOf<Param, ","> ")"\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Param       = id ":" Type\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     Type        = Type "?"                                      --optional\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | "[" Type "]"                                  --array\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | "(" ListOf<Type, ","> ")" "->" Type           --function\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | id                                            --id\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     IfStmt      = if Exp Block else Block                       --long\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | if Exp Block else IfStmt                      --elsif\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | if Exp Block                                  --short\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     LoopStmt    = while Exp Block                               --while\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | repeat Exp Block                              --repeat\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | for id in Exp ("..." | "..<") Exp Block       --range\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | for id in Exp Block                           --collection\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Block       = "\{" Statement* "\}"\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     Exp         = Exp1 "?" Exp1 ":" Exp                         --conditional\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp1\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp1        = Exp1 "??" Exp2                                --unwrapelse\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp2\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp2        = Exp3 ("||" Exp3)+                             --or\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp3 ("&&" Exp3)+                             --and\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp3\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp3        = Exp4 ("|" Exp4)+                              --bitor\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp4 ("^" Exp4)+                              --bitxor\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp4 ("&" Exp4)+                              --bitand\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp4\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp4        = Exp5 ("<="|"<"|"=="|"!="|">="|">") Exp5       --compare\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp5\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp5        = Exp5 ("<<" | ">>") Exp6                       --shift\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp6\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp6        = Exp6 ("+" | "-") Exp7                         --add\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp7\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp7        = Exp7 ("*"| "/" | "%") Exp8                    --multiply\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp8\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp8        = Exp9 "**" Exp8                                --power\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | ("#" | "-" | "!" | some | random) Exp9        --unary\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     Exp9        = true ~mut\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | false ~mut\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | floatlit ~mut\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | intlit ~mut\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | no Type ~mut                                  --emptyopt\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9 "(" ListOf<Exp, ","> ")" ~mut            --call\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9 "[" Exp "]"                              --subscript\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Exp9 ("." | "?.") id                          --member\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | stringlit ~mut\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | id                                            --id\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | Type_array "(" ")" ~mut                       --emptyarray\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | "[" NonemptyListOf<Exp, ","> "]" ~mut         --arrayexp\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | "(" Exp ")" ~mut                              --parens\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     intlit      = digit+\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     floatlit    = digit+ "." digit+ (("E" | "e") ("+" | "-")? digit+)?\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     stringlit   = "\cf13 \strokec13 \\\\\cf7 \strokec7 "" char* "\cf13 \strokec13 \\\\\cf7 \strokec7 ""\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     char        = ~control ~"\cf13 \strokec13 \\\\\\\\\cf7 \strokec7 " ~"\cf13 \strokec13 \\\\\cf7 \strokec7 "" any\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | "\cf13 \strokec13 \\\\\\\\\cf7 \strokec7 " ("n" | "t" | "\cf13 \strokec13 \\\\\cf7 \strokec7 "" | "\cf13 \strokec13 \\\\\\\\\cf7 \strokec7 ")                --escape\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | "\cf13 \strokec13 \\\\\\\\\cf7 \strokec7 u\{" hex hex? hex? hex? hex? hex? "\}"       --codepoint\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     control     = "\cf13 \strokec13 \\\\\cf7 \strokec7 x00".."\cf13 \strokec13 \\\\\cf7 \strokec7 x1f" | "\cf13 \strokec13 \\\\\cf7 \strokec7 x80".."\cf13 \strokec13 \\\\\cf7 \strokec7 x9f"\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     hex         = hexDigit\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     mut         = ~"==" "=" | "++" | "--"\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     let         = "let" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     const       = "const" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     struct      = "struct" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     function    = "function" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     if          = "if" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     else        = "else" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     while       = "while" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     repeat      = "repeat" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     for         = "for" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     in          = "in" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     random      = "random" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     break       = "break" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     return      = "return" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     some        = "some" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     no          = "no" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     true        = "true" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     false       = "false" ~alnum\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     keyword     = let | const | struct | function | if | else | while | repeat\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7                 | for | in | break | return | some | no | random | true | false\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     id          = ~keyword letter alnum*\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7     space      += "//" (~"\cf13 \strokec13 \\\\\cf7 \strokec7 n" any)* --comment\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7   \}\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7 `\cf4 \strokec4 );\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // 3. CST to AST TRANSLATION (Ohm Semantics)\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 const\cf4 \strokec4  \cf12 \strokec12 semantics\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf6 \strokec6 carlosGrammar\cf4 \strokec4 .\cf11 \strokec11 createSemantics\cf4 \strokec4 ();\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 // Utility for unpacking Ohm lists\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 const\cf4 \strokec4  \cf11 \strokec11 unpack\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  (\cf6 \strokec6 list\cf4 \strokec4 ) \cf5 \strokec5 =>\cf4 \strokec4  \cf6 \strokec6 list\cf4 \strokec4 .\cf11 \strokec11 asIteration\cf4 \strokec4 ().\cf6 \strokec6 children\cf4 \strokec4 .\cf11 \strokec11 map\cf4 \strokec4 ((\cf6 \strokec6 c\cf4 \strokec4 ) \cf5 \strokec5 =>\cf4 \strokec4  \cf6 \strokec6 c\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 semantics\cf4 \strokec4 .\cf11 \strokec11 addOperation\cf4 \strokec4 (\cf7 \strokec7 "ast()"\cf4 \strokec4 , \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf11 \strokec11 Program\cf4 \strokec4 (\cf6 \strokec6 statements\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 Program\cf4 \strokec4 (\cf6 \strokec6 statements\cf4 \strokec4 .\cf6 \strokec6 children\cf4 \strokec4 .\cf11 \strokec11 map\cf4 \strokec4 ((\cf6 \strokec6 s\cf4 \strokec4 ) \cf5 \strokec5 =>\cf4 \strokec4  \cf6 \strokec6 s\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ()));\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf8 \strokec8 // Declarations\cf4 \cb1 \strokec4 \
-\cb3   \cf11 \strokec11 VarDecl\cf4 \strokec4 (\cf6 \strokec6 modifier\cf4 \strokec4 , \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 _eq\cf4 \strokec4 , \cf6 \strokec6 exp\cf4 \strokec4 , \cf6 \strokec6 _semi\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 VariableDeclaration\cf4 \strokec4 (\cb1 \
-\cb3       \cf6 \strokec6 modifier\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 exp\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (),\cb1 \
-\cb3     );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 TypeDecl\cf4 \strokec4 (\cf6 \strokec6 _struct\cf4 \strokec4 , \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 fields\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 StructDeclaration\cf4 \strokec4 (\cb1 \
-\cb3       \cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 fields\cf4 \strokec4 .\cf6 \strokec6 children\cf4 \strokec4 .\cf11 \strokec11 map\cf4 \strokec4 ((\cf6 \strokec6 f\cf4 \strokec4 ) \cf5 \strokec5 =>\cf4 \strokec4  \cf6 \strokec6 f\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ()),\cb1 \
-\cb3     );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Field\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 _colon\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 Field\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 FunDecl\cf4 \strokec4 (\cf6 \strokec6 _fn\cf4 \strokec4 , \cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 params\cf4 \strokec4 , \cf6 \strokec6 _colon\cf4 \strokec4 , \cf6 \strokec6 typeOpt\cf4 \strokec4 , \cf6 \strokec6 block\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf5 \strokec5 const\cf4 \strokec4  \cf12 \strokec12 returnType\cf4 \strokec4  \cf10 \strokec10 =\cf4 \cb1 \strokec4 \
-\cb3       \cf6 \strokec6 typeOpt\cf4 \strokec4 .\cf6 \strokec6 children\cf4 \strokec4 .\cf6 \strokec6 length\cf4 \strokec4  \cf10 \strokec10 >\cf4 \strokec4  \cf14 \strokec14 0\cf4 \cb1 \strokec4 \
-\cb3         \cf10 \strokec10 ?\cf4 \strokec4  \cf6 \strokec6 typeOpt\cf4 \strokec4 .\cf6 \strokec6 children\cf4 \strokec4 [\cf14 \strokec14 0\cf4 \strokec4 ].\cf11 \strokec11 ast\cf4 \strokec4 ()\cb1 \
-\cb3         \cf10 \strokec10 :\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 TypeNode\cf4 \strokec4 (\{ \cf6 \strokec6 kind:\cf4 \strokec4  \cf7 \strokec7 "void"\cf4 \strokec4  \});\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 FunctionDeclaration\cf4 \strokec4 (\cb1 \
-\cb3       \cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 params\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (),\cb1 \
-\cb3       \cf6 \strokec6 returnType\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 block\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (),\cb1 \
-\cb3     );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Params\cf4 \strokec4 (\cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 paramList\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf11 \strokec11 unpack\cf4 \strokec4 (\cf6 \strokec6 paramList\cf4 \strokec4 );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Param\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 , \cf6 \strokec6 _colon\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 Parameter\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf8 \strokec8 // Types\cf4 \cb1 \strokec4 \
-\cb3   \cf11 \strokec11 Type_optional\cf4 \strokec4 (\cf6 \strokec6 type\cf4 \strokec4 , \cf6 \strokec6 _qmark\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 TypeNode\cf4 \strokec4 (\{ \cf6 \strokec6 kind:\cf4 \strokec4  \cf7 \strokec7 "optional"\cf4 \strokec4 , \cf6 \strokec6 base:\cf4 \strokec4  \cf6 \strokec6 type\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 () \});\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Type_array\cf4 \strokec4 (\cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 type\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 TypeNode\cf4 \strokec4 (\{ \cf6 \strokec6 kind:\cf4 \strokec4  \cf7 \strokec7 "array"\cf4 \strokec4 , \cf6 \strokec6 base:\cf4 \strokec4  \cf6 \strokec6 type\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 () \});\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Type_function\cf4 \strokec4 (\cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 paramTypes\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 , \cf6 \strokec6 _arrow\cf4 \strokec4 , \cf6 \strokec6 returnType\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 TypeNode\cf4 \strokec4 (\{\cb1 \
-\cb3       \cf6 \strokec6 kind:\cf4 \strokec4  \cf7 \strokec7 "function"\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 params:\cf4 \strokec4  \cf11 \strokec11 unpack\cf4 \strokec4 (\cf6 \strokec6 paramTypes\cf4 \strokec4 ),\cb1 \
-\cb3       \cf6 \strokec6 returns:\cf4 \strokec4  \cf6 \strokec6 returnType\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (),\cb1 \
-\cb3     \});\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Type_id\cf4 \strokec4 (\cf6 \strokec6 id\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 TypeNode\cf4 \strokec4 (\{ \cf6 \strokec6 kind:\cf4 \strokec4  \cf7 \strokec7 "named"\cf4 \strokec4 , \cf6 \strokec6 name:\cf4 \strokec4  \cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4  \});\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf8 \strokec8 // Statements\cf4 \cb1 \strokec4 \
-\cb3   \cf11 \strokec11 Statement_assign\cf4 \strokec4 (\cf6 \strokec6 target\cf4 \strokec4 , \cf6 \strokec6 _eq\cf4 \strokec4 , \cf6 \strokec6 source\cf4 \strokec4 , \cf6 \strokec6 _semi\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 Assignment\cf4 \strokec4 (\cf6 \strokec6 target\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 source\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Statement_call\cf4 \strokec4 (\cf6 \strokec6 callExp\cf4 \strokec4 , \cf6 \strokec6 _semi\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 CallStatement\cf4 \strokec4 (\cf6 \strokec6 callExp\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Statement_return\cf4 \strokec4 (\cf6 \strokec6 _return\cf4 \strokec4 , \cf6 \strokec6 exp\cf4 \strokec4 , \cf6 \strokec6 _semi\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 ReturnStatement\cf4 \strokec4 (\cf6 \strokec6 exp\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Statement_shortreturn\cf4 \strokec4 (\cf6 \strokec6 _return\cf4 \strokec4 , \cf6 \strokec6 _semi\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 ReturnStatement\cf4 \strokec4 (\cf5 \strokec5 null\cf4 \strokec4 );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Block\cf4 \strokec4 (\cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 statements\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf6 \strokec6 statements\cf4 \strokec4 .\cf6 \strokec6 children\cf4 \strokec4 .\cf11 \strokec11 map\cf4 \strokec4 ((\cf6 \strokec6 s\cf4 \strokec4 ) \cf5 \strokec5 =>\cf4 \strokec4  \cf6 \strokec6 s\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf11 \strokec11 IfStmt_long\cf4 \strokec4 (\cf6 \strokec6 _if\cf4 \strokec4 , \cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 block1\cf4 \strokec4 , \cf6 \strokec6 _else\cf4 \strokec4 , \cf6 \strokec6 block2\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 IfStatement\cf4 \strokec4 (\cf6 \strokec6 test\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 block1\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 block2\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 IfStmt_short\cf4 \strokec4 (\cf6 \strokec6 _if\cf4 \strokec4 , \cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 block\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 IfStatement\cf4 \strokec4 (\cf6 \strokec6 test\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 block\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf5 \strokec5 null\cf4 \strokec4 );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 LoopStmt_while\cf4 \strokec4 (\cf6 \strokec6 _while\cf4 \strokec4 , \cf6 \strokec6 test\cf4 \strokec4 , \cf6 \strokec6 block\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 WhileStatement\cf4 \strokec4 (\cf6 \strokec6 test\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 block\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf8 \strokec8 // Expressions (Binary & Unary Ops)\cf4 \cb1 \strokec4 \
-\cb3   \cf11 \strokec11 Exp4_compare\cf4 \strokec4 (\cf6 \strokec6 left\cf4 \strokec4 , \cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 right\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 BinaryExpression\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf6 \strokec6 left\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 right\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Exp6_add\cf4 \strokec4 (\cf6 \strokec6 left\cf4 \strokec4 , \cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 right\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 BinaryExpression\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf6 \strokec6 left\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 right\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Exp7_multiply\cf4 \strokec4 (\cf6 \strokec6 left\cf4 \strokec4 , \cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 right\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 BinaryExpression\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf6 \strokec6 left\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 right\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Exp8_unary\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 operand\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 UnaryExpression\cf4 \strokec4 (\cf6 \strokec6 op\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf6 \strokec6 operand\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf11 \strokec11 Exp9_call\cf4 \strokec4 (\cf6 \strokec6 callee\cf4 \strokec4 , \cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 args\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 CallExpression\cf4 \strokec4 (\cf6 \strokec6 callee\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf11 \strokec11 unpack\cf4 \strokec4 (\cf6 \strokec6 args\cf4 \strokec4 ));\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Exp9_subscript\cf4 \strokec4 (\cf6 \strokec6 array\cf4 \strokec4 , \cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 index\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 SubscriptExpression\cf4 \strokec4 (\cf6 \strokec6 array\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (), \cf6 \strokec6 index\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ());\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Exp9_member\cf4 \strokec4 (\cf6 \strokec6 object\cf4 \strokec4 , \cf6 \strokec6 op\cf4 \strokec4 , \cf6 \strokec6 id\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf11 \strokec11 MemberExpression\cf4 \strokec4 (\cb1 \
-\cb3       \cf6 \strokec6 object\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 (),\cb1 \
-\cb3       \cf6 \strokec6 op\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4  \cf10 \strokec10 ===\cf4 \strokec4  \cf7 \strokec7 "?."\cf4 \strokec4 ,\cb1 \
-\cb3       \cf6 \strokec6 id\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 ,\cb1 \
-\cb3     );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 Exp9_parens\cf4 \strokec4 (\cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 exp\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf6 \strokec6 exp\cf4 \strokec4 .\cf11 \strokec11 ast\cf4 \strokec4 ();\cb1 \
-\cb3   \},\cb1 \
-\
-\cb3   \cf8 \strokec8 // Literals and Identifiers\cf4 \cb1 \strokec4 \
-\cb3   \cf11 \strokec11 true\cf4 \strokec4 (\cf6 \strokec6 _\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Literal\cf4 \strokec4 (\cf7 \strokec7 "boolean"\cf4 \strokec4 , \cf5 \strokec5 true\cf4 \strokec4 );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 false\cf4 \strokec4 (\cf6 \strokec6 _\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Literal\cf4 \strokec4 (\cf7 \strokec7 "boolean"\cf4 \strokec4 , \cf5 \strokec5 false\cf4 \strokec4 );\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 intlit\cf4 \strokec4 (\cf6 \strokec6 _\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Literal\cf4 \strokec4 (\cf7 \strokec7 "int"\cf4 \strokec4 , \cf11 \strokec11 parseInt\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 , \cf14 \strokec14 10\cf4 \strokec4 ));\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 floatlit\cf4 \strokec4 (\cf6 \strokec6 _1\cf4 \strokec4 , \cf6 \strokec6 _2\cf4 \strokec4 , \cf6 \strokec6 _3\cf4 \strokec4 , \cf6 \strokec6 _4\cf4 \strokec4 , \cf6 \strokec6 _5\cf4 \strokec4 , \cf6 \strokec6 _6\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Literal\cf4 \strokec4 (\cf7 \strokec7 "float"\cf4 \strokec4 , \cf11 \strokec11 parseFloat\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 ));\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 stringlit\cf4 \strokec4 (\cf6 \strokec6 _open\cf4 \strokec4 , \cf6 \strokec6 chars\cf4 \strokec4 , \cf6 \strokec6 _close\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Literal\cf4 \strokec4 (\cf7 \strokec7 "string"\cf4 \strokec4 , \cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 .\cf11 \strokec11 slice\cf4 \strokec4 (\cf14 \strokec14 1\cf4 \strokec4 , \cf10 \strokec10 -\cf14 \strokec14 1\cf4 \strokec4 ));\cb1 \
-\cb3   \},\cb1 \
-\cb3   \cf11 \strokec11 id\cf4 \strokec4 (\cf6 \strokec6 _first\cf4 \strokec4 , \cf6 \strokec6 _rest\cf4 \strokec4 ) \{\cb1 \
-\cb3     \cf2 \strokec2 return\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Identifier\cf4 \strokec4 (\cf5 \strokec5 this\cf4 \strokec4 .\cf6 \strokec6 sourceString\cf4 \strokec4 );\cb1 \
-\cb3   \},\cb1 \
-\cb3 \});\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // 4. PARSER FUNCTION\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // ==========================================================\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf2 \cb3 \strokec2 export\cf4 \strokec4  \cf2 \strokec2 default\cf4 \strokec4  \cf5 \strokec5 function\cf4 \strokec4  \cf11 \strokec11 parse\cf4 \strokec4 (\cf6 \strokec6 sourceCode\cf4 \strokec4 ) \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 const\cf4 \strokec4  \cf12 \strokec12 match\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf12 \strokec12 carlosGrammar\cf4 \strokec4 .\cf11 \strokec11 match\cf4 \strokec4 (\cf6 \strokec6 sourceCode\cf4 \strokec4 );\cb1 \
-\cb3   \cf2 \strokec2 if\cf4 \strokec4  (\cf10 \strokec10 !\cf12 \strokec12 match\cf4 \strokec4 .\cf11 \strokec11 succeeded\cf4 \strokec4 ()) \{\cb1 \
-\cb3     \cf2 \strokec2 throw\cf4 \strokec4  \cf5 \strokec5 new\cf4 \strokec4  \cf9 \strokec9 Error\cf4 \strokec4 (\cf12 \strokec12 match\cf4 \strokec4 .\cf6 \strokec6 message\cf4 \strokec4 );\cb1 \
-\cb3   \}\cb1 \
-\cb3   \cf2 \strokec2 return\cf4 \strokec4  \cf11 \strokec11 semantics\cf4 \strokec4 (\cf12 \strokec12 match\cf4 \strokec4 ).\cf11 \strokec11 ast\cf4 \strokec4 ();\cb1 \
-\cb3 \}\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 // ----------------------------------------------------------\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // Quick Test Run\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 // ----------------------------------------------------------\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf5 \cb3 \strokec5 const\cf4 \strokec4  \cf12 \strokec12 testCode\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf7 \strokec7 `\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf7 \cb3 \strokec7   const languageName = "Carlos";\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7   \cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7   function greeting(): string \{\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     return "Welcome";\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7   \}\cf4 \cb1 \strokec4 \
-\
-\cf7 \cb3 \strokec7   repeat 5 \{\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7     print(greeting() + " " + languageName);\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7   \}\cf4 \cb1 \strokec4 \
-\cf7 \cb3 \strokec7 `\cf4 \strokec4 ;\cb1 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf2 \cb3 \strokec2 try\cf4 \strokec4  \{\cb1 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 const\cf4 \strokec4  \cf12 \strokec12 ast\cf4 \strokec4  \cf10 \strokec10 =\cf4 \strokec4  \cf11 \strokec11 parse\cf4 \strokec4 (\cf12 \strokec12 testCode\cf4 \strokec4 );\cb1 \
-\cb3   \cf6 \strokec6 console\cf4 \strokec4 .\cf11 \strokec11 log\cf4 \strokec4 (\cf6 \strokec6 JSON\cf4 \strokec4 .\cf11 \strokec11 stringify\cf4 \strokec4 (\cf12 \strokec12 ast\cf4 \strokec4 , \cf5 \strokec5 null\cf4 \strokec4 , \cf14 \strokec14 2\cf4 \strokec4 ));\cb1 \
-\cb3 \} \cf2 \strokec2 catch\cf4 \strokec4  (\cf6 \strokec6 e\cf4 \strokec4 ) \{\cb1 \
-\cb3   \cf6 \strokec6 console\cf4 \strokec4 .\cf11 \strokec11 error\cf4 \strokec4 (\cf7 \strokec7 "Syntax Error:"\cf4 \strokec4 , \cf6 \strokec6 e\cf4 \strokec4 .\cf6 \strokec6 message\cf4 \strokec4 );\cb1 \
-\cb3 \}\cb1 \
-\
+// ==========================================================
+// 1. ABSTRACT SYNTAX TREE (AST) CLASSES
+// ==========================================================
+class Program {
+  constructor(statements) {
+    this.statements = statements;
+  }
+}
+class VariableDeclaration {
+  constructor(modifier, id, initializer) {
+    this.modifier = modifier; // "let" or "const"
+    this.id = id;
+    this.initializer = initializer;
+  }
+}
+class StructDeclaration {
+  constructor(id, fields) {
+    Object.assign(this, { id, fields });
+  }
+}
+class Field {
+  constructor(id, type) {
+    Object.assign(this, { id, type });
+  }
+}
+class FunctionDeclaration {
+  constructor(id, params, returnType, body) {
+    Object.assign(this, { id, params, returnType, body });
+  }
+}
+class Parameter {
+  constructor(id, type) {
+    Object.assign(this, { id, type });
+  }
+}
+class TypeNode {
+  // Can represent simple types, arrays, optionals, or functions depending on properties
+  constructor(description) {
+    Object.assign(this, description);
+  }
+}
+class Assignment {
+  constructor(target, source) {
+    Object.assign(this, { target, source });
+  }
+}
+class CallStatement {
+  constructor(callExp) {
+    this.callExp = callExp;
+  }
+}
+class ReturnStatement {
+  constructor(expression) {
+    this.expression = expression;
+  } // null if short return
+}
+class IfStatement {
+  constructor(test, consequent, alternate) {
+    Object.assign(this, { test, consequent, alternate });
+  }
+}
+class WhileStatement {
+  constructor(test, body) {
+    Object.assign(this, { test, body });
+  }
+}
+class BinaryExpression {
+  constructor(op, left, right) {
+    Object.assign(this, { op, left, right });
+  }
+}
+class UnaryExpression {
+  constructor(op, operand) {
+    Object.assign(this, { op, operand });
+  }
+}
+class CallExpression {
+  constructor(callee, args) {
+    Object.assign(this, { callee, args });
+  }
+}
+class SubscriptExpression {
+  constructor(array, index) {
+    Object.assign(this, { array, index });
+  }
+}
+class MemberExpression {
+  constructor(object, isOptional, field) {
+    Object.assign(this, { object, isOptional, field });
+  }
+}
+class Literal {
+  constructor(type, value) {
+    Object.assign(this, { type, value });
+  }
+}
+class Identifier {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+// ==========================================================
+// 2. OHM GRAMMAR (Paste your grammar string here)
+// ==========================================================
+const carlosGrammar = ohm.grammar(`
+  Carlos {
+    Program     = Statement+
+    Statement   = VarDecl
+                | TypeDecl
+                | FunDecl
+                | Exp9 ("++" | "--") ";"                        --bump
+                | Exp9 "=" Exp ";"                              --assign
+                | Exp9_call ";"                                 --call
+                | break ";"                                     --break
+                | return Exp ";"                                --return
+                | return ";"                                    --shortreturn
+                | IfStmt
+                | LoopStmt
+
+    VarDecl     = (let | const) id "=" Exp ";"
+    TypeDecl    = struct id "{" Field* "}"
+    Field       = id ":" Type
+    FunDecl     = function id Params (":" Type)? Block
+    Params      = "(" ListOf<Param, ","> ")"
+    Param       = id ":" Type
+
+    Type        = Type "?"                                      --optional
+                | "[" Type "]"                                  --array
+                | "(" ListOf<Type, ","> ")" "->" Type           --function
+                | id                                            --id
+
+    IfStmt      = if Exp Block else Block                       --long
+                | if Exp Block else IfStmt                      --elsif
+                | if Exp Block                                  --short
+    LoopStmt    = while Exp Block                               --while
+                | repeat Exp Block                              --repeat
+                | for id in Exp ("..." | "..<") Exp Block       --range
+                | for id in Exp Block                           --collection
+    Block       = "{" Statement* "}"
+
+    Exp         = Exp1 "?" Exp1 ":" Exp                         --conditional
+                | Exp1
+    Exp1        = Exp1 "??" Exp2                                --unwrapelse
+                | Exp2
+    Exp2        = Exp3 ("||" Exp3)+                             --or
+                | Exp3 ("&&" Exp3)+                             --and
+                | Exp3
+    Exp3        = Exp4 ("|" Exp4)+                              --bitor
+                | Exp4 ("^" Exp4)+                              --bitxor
+                | Exp4 ("&" Exp4)+                              --bitand
+                | Exp4
+    Exp4        = Exp5 ("<="|"<"|"=="|"!="|">="|">") Exp5       --compare
+                | Exp5
+    Exp5        = Exp5 ("<<" | ">>") Exp6                       --shift
+                | Exp6
+    Exp6        = Exp6 ("+" | "-") Exp7                         --add
+                | Exp7
+    Exp7        = Exp7 ("*"| "/" | "%") Exp8                    --multiply
+                | Exp8
+    Exp8        = Exp9 "**" Exp8                                --power
+                | Exp9
+                | ("#" | "-" | "!" | some | random) Exp9        --unary
+    Exp9        = true ~mut
+                | false ~mut
+                | floatlit ~mut
+                | intlit ~mut
+                | no Type ~mut                                  --emptyopt
+                | Exp9 "(" ListOf<Exp, ","> ")" ~mut            --call
+                | Exp9 "[" Exp "]"                              --subscript
+                | Exp9 ("." | "?.") id                          --member
+                | stringlit ~mut
+                | id                                            --id
+                | Type_array "(" ")" ~mut                       --emptyarray
+                | "[" NonemptyListOf<Exp, ","> "]" ~mut         --arrayexp
+                | "(" Exp ")" ~mut                              --parens
+
+    intlit      = digit+
+    floatlit    = digit+ "." digit+ (("E" | "e") ("+" | "-")? digit+)?
+    stringlit   = "\\"" char* "\\""
+    char        = ~control ~"\\\\" ~"\\"" any
+                | "\\\\" ("n" | "t" | "\\"" | "\\\\")                --escape
+                | "\\\\u{" hex hex? hex? hex? hex? hex? "}"       --codepoint
+    control     = "\\x00".."\\x1f" | "\\x80".."\\x9f"
+    hex         = hexDigit
+    mut         = ~"==" "=" | "++" | "--"
+
+    let         = "let" ~alnum
+    const       = "const" ~alnum
+    struct      = "struct" ~alnum
+    function    = "function" ~alnum
+    if          = "if" ~alnum
+    else        = "else" ~alnum
+    while       = "while" ~alnum
+    repeat      = "repeat" ~alnum
+    for         = "for" ~alnum
+    in          = "in" ~alnum
+    random      = "random" ~alnum
+    break       = "break" ~alnum
+    return      = "return" ~alnum
+    some        = "some" ~alnum
+    no          = "no" ~alnum
+    true        = "true" ~alnum
+    false       = "false" ~alnum
+    keyword     = let | const | struct | function | if | else | while | repeat
+                | for | in | break | return | some | no | random | true | false
+    id          = ~keyword letter alnum*
+
+    space      += "//" (~"\\n" any)* --comment
+  }
+`);
+
+// ==========================================================
+// 3. CST to AST TRANSLATION (Ohm Semantics)
+// ==========================================================
+const semantics = carlosGrammar.createSemantics();
+
+// Utility for unpacking Ohm lists
+const unpack = (list) => list.asIteration().children.map((c) => c.ast());
+
+semantics.addOperation("ast()", {
+  Program(statements) {
+    return new Program(statements.children.map((s) => s.ast()));
+  },
+
+  // Declarations
+  VarDecl(modifier, id, _eq, exp, _semi) {
+    return new VariableDeclaration(
+      modifier.sourceString,
+      id.sourceString,
+      exp.ast(),
+    );
+  },
+  TypeDecl(_struct, id, _open, fields, _close) {
+    return new StructDeclaration(
+      id.sourceString,
+      fields.children.map((f) => f.ast()),
+    );
+  },
+  Field(id, _colon, type) {
+    return new Field(id.sourceString, type.ast());
+  },
+  FunDecl(_fn, id, params, _colon, typeOpt, block) {
+    const returnType =
+      typeOpt.children.length > 0
+        ? typeOpt.children[0].ast()
+        : new TypeNode({ kind: "void" });
+    return new FunctionDeclaration(
+      id.sourceString,
+      params.ast(),
+      returnType,
+      block.ast(),
+    );
+  },
+  Params(_open, paramList, _close) {
+    return unpack(paramList);
+  },
+  Param(id, _colon, type) {
+    return new Parameter(id.sourceString, type.ast());
+  },
+
+  // Types
+  Type_optional(type, _qmark) {
+    return new TypeNode({ kind: "optional", base: type.ast() });
+  },
+  Type_array(_open, type, _close) {
+    return new TypeNode({ kind: "array", base: type.ast() });
+  },
+  Type_function(_open, paramTypes, _close, _arrow, returnType) {
+    return new TypeNode({
+      kind: "function",
+      params: unpack(paramTypes),
+      returns: returnType.ast(),
+    });
+  },
+  Type_id(id) {
+    return new TypeNode({ kind: "named", name: id.sourceString });
+  },
+
+  // Statements
+  Statement_assign(target, _eq, source, _semi) {
+    return new Assignment(target.ast(), source.ast());
+  },
+  Statement_call(callExp, _semi) {
+    return new CallStatement(callExp.ast());
+  },
+  Statement_return(_return, exp, _semi) {
+    return new ReturnStatement(exp.ast());
+  },
+  Statement_shortreturn(_return, _semi) {
+    return new ReturnStatement(null);
+  },
+  Block(_open, statements, _close) {
+    return statements.children.map((s) => s.ast());
+  },
+
+  IfStmt_long(_if, test, block1, _else, block2) {
+    return new IfStatement(test.ast(), block1.ast(), block2.ast());
+  },
+  IfStmt_short(_if, test, block) {
+    return new IfStatement(test.ast(), block.ast(), null);
+  },
+  LoopStmt_while(_while, test, block) {
+    return new WhileStatement(test.ast(), block.ast());
+  },
+
+  // Expressions (Binary & Unary Ops)
+  Exp4_compare(left, op, right) {
+    return new BinaryExpression(op.sourceString, left.ast(), right.ast());
+  },
+  Exp6_add(left, op, right) {
+    return new BinaryExpression(op.sourceString, left.ast(), right.ast());
+  },
+  Exp7_multiply(left, op, right) {
+    return new BinaryExpression(op.sourceString, left.ast(), right.ast());
+  },
+  Exp8_unary(op, operand) {
+    return new UnaryExpression(op.sourceString, operand.ast());
+  },
+
+  Exp9_call(callee, _open, args, _close) {
+    return new CallExpression(callee.ast(), unpack(args));
+  },
+  Exp9_subscript(array, _open, index, _close) {
+    return new SubscriptExpression(array.ast(), index.ast());
+  },
+  Exp9_member(object, op, id) {
+    return new MemberExpression(
+      object.ast(),
+      op.sourceString === "?.",
+      id.sourceString,
+    );
+  },
+  Exp9_parens(_open, exp, _close) {
+    return exp.ast();
+  },
+
+  // Literals and Identifiers
+  true(_) {
+    return new Literal("boolean", true);
+  },
+  false(_) {
+    return new Literal("boolean", false);
+  },
+  intlit(_) {
+    return new Literal("int", parseInt(this.sourceString, 10));
+  },
+  floatlit(_1, _2, _3, _4, _5, _6) {
+    return new Literal("float", parseFloat(this.sourceString));
+  },
+  stringlit(_open, chars, _close) {
+    return new Literal("string", this.sourceString.slice(1, -1));
+  },
+  id(_first, _rest) {
+    return new Identifier(this.sourceString);
+  },
+});
+
+// ==========================================================
+// 4. PARSER FUNCTION
+// ==========================================================
+export default function parse(sourceCode) {
+  const match = carlosGrammar.match(sourceCode);
+  if (!match.succeeded()) {
+    throw new Error(match.message);
+  }
+  return semantics(match).ast();
+}
+
+// ----------------------------------------------------------
+// Quick Test Run
+// ----------------------------------------------------------
+const testCode = `
+  const languageName = "Carlos";
+  
+  function greeting(): string {
+    return "Welcome";
+  }
+
+  repeat 5 {
+    print(greeting() + " " + languageName);
+  }
+`;
+
+try {
+  const ast = parse(testCode);
+  console.log(JSON.stringify(ast, null, 2));
+} catch (e) {
+  console.error("Syntax Error:", e.message);
 }

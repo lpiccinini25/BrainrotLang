@@ -111,5 +111,5 @@ for (let i = 1; i <= x; i++) {
 ## Links
 
 - **Grammar**: [src/brainrot.ohm](./src/brainrot.ohm)
-- **This Repository**: [BrainrotLang](https://aristotle-dev.github.io/brainrot/)
-- **Companion Site**: [Brainrot GH Pages Site](https://lucapiccinini.github.io/Brainrot/)
+- **This Repository**: [BrainrotLang](https://github.com/lpiccinini25/BrainrotLang/)
+- **Companion Site**: [Brainrot GH Pages Site](https://aristotle-dev.github.io/brainrot)

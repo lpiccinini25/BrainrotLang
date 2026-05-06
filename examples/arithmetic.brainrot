@@ -1,0 +1,12 @@
+lowkey x = 10;
+lowkey y = 20;
+lowkey sum = x + y;
+lowkey product = x fanum_tax y;
+lowkey power = x ** 2;
+
+yap("Sum: ");
+yap(sum);
+yap("Product: ");
+yap(product);
+yap("Power: ");
+yap(power);

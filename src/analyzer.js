@@ -1,3 +1,150 @@
+Dowshire
+dowshire
+Invisible
+
+llimeincoconut — 11/01/2026 14:34
+I actually get back sooner I misremembered flight time
+Should be back before 7 I think now
+llimeincoconut — 11/01/2026 17:57
+Should be back in like 25 min
+llimeincoconut — 11/01/2026 20:44
+Forgor one card
+Dowshire — 11/01/2026 20:44
+You outside
+llimeincoconut — 11/01/2026 20:44
+Yes
+Dowshire — 08/03/2026 13:15
+When you getting back to the dorm
+I’ll prob be back like 5/6 ish
+llimeincoconut — 08/03/2026 13:42
+around 5
+Dowshire — 18/03/2026 15:49
+Did you slack ray toal telling him you did the quiz or did you email him?
+llimeincoconut — 18/03/2026 15:49
+I slacked him
+Dowshire — 05/04/2026 21:06
+Yo when you coming back to lmu
+llimeincoconut — 05/04/2026 21:12
+5am monday
+Dowshire — 05/04/2026 21:12
+Oh wtf
+llimeincoconut — 05/04/2026 21:12
+i mean 8am mondat
+monday
+Dowshire — 05/04/2026 21:12
+Oh cool then
+llimeincoconut — Yesterday at 19:04
+can u commit this into analyzer.js in the src folder
+import * as core from "./core.js";
+
+function error(message, at) {
+  throw new Error(`${at.getLineAndColumnMessage()}${message}`);
+}
+
+message.txt
+16 KB
+And then this into the compiler.js file in src
+
+
+import parse from "./parser.js";
+import translate from "./analyzer.js";
+import optimize from "./optimizer.js";
+import generate from "./generator.js";
+
+export default function compile(source, outputType = "ast") {
+  const match = parse(source);
+  const ast = translate(match);
+  if (outputType === "ast") return ast;
+  const optimized = optimize(ast);
+  if (outputType === "optimized") return optimized;
+  return generate(optimized);
+}
+ 
+And then this into brainrot.js which is again in src
+
+
+#!/usr/bin/env node
+
+import fs from "fs/promises";
+import process from "process";
+import compile from "./compiler.js";
+
+const help = `Brainrot Compiler
+
+Usage:
+  brainrot <file> <outputType>
+
+Output types:
+  ast        Print the abstract syntax tree
+  optimized  Print the optimized AST
+  js         Generate JavaScript code
+`;
+
+async function main() {
+  if (process.argv.length < 3) {
+    console.log(help);
+    return;
+  }
+
+  const filename = process.argv[2];
+  const outputType = process.argv[3] || "ast";
+
+  try {
+    const source = await fs.readFile(filename, "utf8");
+    const result = compile(source, outputType);
+    if (typeof result === "string") {
+      console.log(result);
+    } else {
+      console.log(JSON.stringify(result, null, 2));
+    }
+  } catch (e) {
+    console.error(`\x1b[31mError:\x1b[0m ${e.message}`);
+    process.exit(1);
+  }
+}
+
+main();
+ 
+Dowshire — Yesterday at 19:58
+Can it wait ? I just left cinema
+llimeincoconut — Yesterday at 19:58
+Yeah
+llimeincoconut — 14:08
+Can you please commit this stuff now
+Dowshire — 14:27
+done
+Did i do it right
+llimeincoconut — 14:30
+yes it looks really good thank you
+Dowshire — 20:03
+Is the project all done ?
+llimeincoconut — 20:14
+it would be nice if you were able to make a few more commits 
+do you think you will be back tonight before 12?
+Dowshire — 20:20
+Yeah
+I’ll be back at 11
+Is that enough time
+llimeincoconut — 20:21
+Yeah that is fine
+llimeincoconut — 23:39
+analyzer.js
+import * as core from "./core.js";
+
+function error(message, at) {
+  throw new Error(`${at.getLineAndColumnMessage()}${message}`);
+}
+
+message.txt
+20 KB
+﻿
+llimeincoconut
+newshoes54
+ 
+ 
+ 
+LMU '27
+Luca
 import * as core from "./core.js";
 
 function error(message, at) {
@@ -9,58 +156,103 @@ function validate(condition, message, at) {
 }
 
 function validateBoolean(e, at) {
-  validate(e.type === core.boolType, "Expected rizz (boolean)", at);
+  validate(
+    areCompatible(e.type, core.boolType),
+    `Expected rizz (boolean), got ${typeName(e.type)}`,
+    at,
+  );
 }
 
 function validateNumber(e, at) {
   validate(
-    e.type === core.numberType || e.type === core.intType || e.type === core.floatType,
-    "Expected sigma (number)",
-    at
+    areCompatible(e.type, core.numberType),
+    `Expected sigma (number), got ${typeName(e.type)}`,
+    at,
   );
 }
 
 function validateInteger(e, at) {
   validate(
-    e.type === core.intType || (e.type === core.numberType && (e.value === undefined || Number.isInteger(e.value))),
-    "Expected an integer",
-    at
+    areCompatible(e.type, core.numberType) &&
+      (e.value === undefined || Number.isInteger(e.value)),
+    `Expected integer sigma, got ${typeName(e.type)}`,
+    at,
   );
+}
+
+function areCompatible(t1, t2) {
+  if (t1 === t2) return true;
+  if (t1 === core.anyType || t2 === core.anyType) return true;
+  if (t1?.kind === "ArrayType" && t2?.kind === "ArrayType") {
+    return areCompatible(t1.baseType, t2.baseType);
+  }
+  if (t1?.kind === "OptionalType" && t2?.kind === "OptionalType") {
+    return areCompatible(t1.baseType, t2.baseType);
+  }
+  if (t1?.kind === "FunctionType" && t2?.kind === "FunctionType") {
+    return (
+      t1.parameterTypes.length === t2.parameterTypes.length &&
+      areCompatible(t1.returnType, t2.returnType) &&
+      t1.parameterTypes.every((t, i) => areCompatible(t, t2.parameterTypes[i]))
+    );
+  }
+  return false;
+}
+
+function typeName(t) {
+  if (!t || t === core.voidType) return "void";
+  if (typeof t === "string") return t;
+  if (t.kind === "ArrayType") return `[${typeName(t.baseType)}]`;
+  if (t.kind === "OptionalType") return `${typeName(t.baseType)}?`;
+  if (t.kind === "FunctionType") {
+    return `(${t.parameterTypes.map(typeName).join(",")}) -> ${typeName(
+      t.returnType,
+    )}`;
+  }
+  if (t.kind === "StructDeclaration") return t.name;
+  if (t === core.numberType) return "sigma";
+  if (t === core.boolType) return "rizz";
+  if (t === core.stringType) return "string";
+  /* istanbul ignore next */
+  return t.kind || t.name || "unknown";
 }
 
 function validateAllHaveSameType(expressions, at) {
   validate(
-    expressions.every((e) => e.type === expressions[0].type),
+    expressions.every((e) => areCompatible(e.type, expressions[0].type)),
     "All elements must have the same aura (type)",
-    at
+    at,
   );
 }
 
 function validateIsFunction(e, at) {
-  validate(e.type === "function", "Not a cook (function)", at);
+  validate(
+    e.type === "function" || e.type?.kind === "FunctionType",
+    "Not a cook (function)",
+    at,
+  );
 }
 
 function validateNotReadOnly(e, at) {
   validate(!e.readOnly, `Cannot reassign to a locked_in variable, mid.`, at);
 }
 
-function validateArgumentsMatchParameters(args, params, at) {
+function validateArgumentsMatchParameters(args, targetType, at) {
+  const paramTypes =
+    targetType.kind === "FunctionType"
+      ? targetType.parameterTypes
+      : targetType.map((p) => p.type || p);
+
   validate(
-    args.length === params.length,
-    `${params.length} argument(s) expected but ${args.length} passed`,
-    at
+    args.length === paramTypes.length,
+    `${paramTypes.length} argument(s) expected but ${args.length} passed`,
+    at,
   );
   args.forEach((arg, i) => {
-    const argType = arg.type;
-    const paramType = params[i].type;
-    const compatible =
-      argType === paramType ||
-      ((argType === core.intType || argType === core.floatType) && paramType === core.numberType) ||
-      (argType === core.numberType && (paramType === core.intType || paramType === core.floatType));
     validate(
-      compatible,
-      `Cannot assign a ${argType.kind} to a ${paramType.kind}`,
-      at
+      areCompatible(arg.type, paramTypes[i]),
+      `Cannot assign a ${typeName(arg.type)} to a ${typeName(paramTypes[i])}`,
+      at,
     );
   });
 }
@@ -68,6 +260,7 @@ function validateArgumentsMatchParameters(args, params, at) {
 function typeOf(node) {
   if (node.type) return node.type;
   if (node.kind === "IfStatement") return typeOf(node.consequent);
+  /* istanbul ignore next */
   return core.anyType;
 }
 
@@ -75,9 +268,14 @@ class Context {
   constructor(parent = null) {
     this.parent = parent;
     this.bindings = new Map();
+    this.currentFunction = parent?.currentFunction || null;
   }
   set(name, entity, at) {
-    validate(!this.bindings.has(name), `Identifier ${name} already locked in`, at);
+    validate(
+      !this.bindings.has(name),
+      `Identifier ${name} already locked in`,
+      at,
+    );
     this.bindings.set(name, entity);
     return entity;
   }
@@ -128,14 +326,25 @@ export default function translate(match) {
       validateNotReadOnly(variable, exp.source);
       return core.assignment(
         variable,
-        core.binaryExp(variable, op.sourceString === "++" ? "+" : "-", core.literal(1, core.intType), core.numberType)
+        core.binaryExp(
+          variable,
+          op.sourceString === "++" ? "+" : "-",
+          core.literal(1, core.numberType),
+          core.numberType,
+        ),
       );
     },
 
     Statement_assign(target, _eq, source, _semi) {
       const t = target.translate();
+      const s = source.translate();
       validateNotReadOnly(t, target.source);
-      return core.assignment(t, source.translate());
+      validate(
+        areCompatible(s.type, t.type),
+        `Cannot assign a ${typeName(s.type)} to a ${typeName(t.type)}`,
+        target.source,
+      );
+      return core.assignment(t, s);
     },
 
     Statement_call(call, _semi) {
@@ -147,10 +356,25 @@ export default function translate(match) {
     },
 
     Statement_return(_it_gave, exp, _semi) {
-      return core.returnStatement(exp.translate());
+      const e = exp.translate();
+      validate(
+        areCompatible(e.type, context.currentFunction?.returnType),
+        `Cannot assign a ${typeName(e.type)} to a ${typeName(
+          context.currentFunction?.returnType,
+        )}`,
+        exp.source,
+      );
+      return core.returnStatement(e);
     },
 
     Statement_shortreturn(_it_gave, _semi) {
+      validate(
+        areCompatible(core.voidType, context.currentFunction?.returnType),
+        `Expected a return value of type ${typeName(
+          context.currentFunction?.returnType,
+        )}`,
+        _it_gave.source,
+      );
       return core.shortReturnStatement();
     },
 
@@ -171,16 +395,22 @@ export default function translate(match) {
 
     FunDecl(_cook, id, params, _colon, typeOpt, block) {
       const name = id.translate();
-      const returnTypeName = typeOpt.sourceString.replace(/^:\s*/, "") || "void";
-      const typeMap = { sigma: core.numberType, rizz: core.boolType, int: core.intType, float: core.floatType };
-      const resolvedReturnType = typeMap[returnTypeName] ?? returnTypeName;
       const paramEntities = params.translate();
+      const resolvedReturnType =
+        typeOpt.children.length > 0
+          ? typeOpt.children[0].translate()
+          : core.voidType;
 
       const fun = core.functionObject(name, paramEntities, resolvedReturnType);
+      fun.type = core.functionType(
+        paramEntities.map((p) => p.type),
+        resolvedReturnType,
+      );
       context.set(name, fun, id.source);
 
       const previousContext = context;
       context = new Context(context);
+      context.currentFunction = fun;
       for (const p of paramEntities) {
         context.set(p.name, p, id.source);
       }
@@ -214,13 +444,17 @@ export default function translate(match) {
     Type_function(_open, params, _close, _arrow, ret) {
       return core.functionType(
         params.asIteration().children.map((p) => p.translate()),
-        ret.translate()
+        ret.translate(),
       );
     },
 
     Type_id(id) {
       const typeName = id.translate();
-      const typeMap = { sigma: core.numberType, rizz: core.boolType, int: core.intType, float: core.floatType };
+      const typeMap = {
+        sigma: core.numberType,
+        rizz: core.boolType,
+        void: core.voidType,
+      };
       if (typeMap[typeName]) return typeMap[typeName];
       return context.get(typeName, id.source);
     },
@@ -264,25 +498,37 @@ export default function translate(match) {
 
       const previousContext = context;
       context = new Context(context);
-      const iterator = core.variableDeclaration(name, lowExp, true);
+      const iteratorType = core.numberType;
+      const iterator = core.variable(name, iteratorType);
+      iterator.readOnly = true;
       context.set(name, iterator, id.source);
       const body = block.translate();
       context = previousContext;
 
-      return core.forRangeStatement(iterator, lowExp, op.sourceString, highExp, body);
+      return core.forRangeStatement(
+        iterator,
+        lowExp,
+        op.sourceString,
+        highExp,
+        body,
+      );
     },
 
     LoopStmt_collection(_grind, id, _with, collection, block) {
-      const name = id.translate();
       const collExp = collection.translate();
-
+      validate(
+        collExp.type?.kind === "ArrayType",
+        "Expected an array",
+        collection.source,
+      );
+      const name = id.translate();
       const previousContext = context;
       context = new Context(context);
-      const iterator = core.variableDeclaration(name, null, true);
+      const iterator = core.variable(name, collExp.type.baseType);
+      iterator.readOnly = true;
       context.set(name, iterator, id.source);
       const body = block.translate();
       context = previousContext;
-
       return core.forCollectionStatement(iterator, collExp, body);
     },
 
@@ -299,126 +545,217 @@ export default function translate(match) {
       const consequentValue = consequent.translate();
       const alternateValue = alternate.translate();
       validateBoolean(testValue, test.source);
-      validateAllHaveSameType([consequentValue, alternateValue], consequent.source);
-      return core.ifStatement(testValue, consequentValue, alternateValue);
+      validateAllHaveSameType(
+        [consequentValue, alternateValue],
+        consequent.source,
+      );
+      return core.conditional(
+        testValue,
+        consequentValue,
+        alternateValue,
+        consequentValue.type,
+      );
     },
 
     Exp1_unwrapelse(left, _op, right) {
       const optionalValue = left.translate();
       const fallbackValue = right.translate();
-      return core.binaryExp(optionalValue, "??", fallbackValue, fallbackValue.type);
+      return core.binaryExp(
+        optionalValue,
+        "??",
+        fallbackValue,
+        fallbackValue.type,
+      );
     },
 
     Exp2_or(left, _op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      validateBoolean(leftOperand, left.source);
-      validateBoolean(rightOperand, right.source);
-      return core.binaryExp(leftOperand, "||", rightOperand, core.boolType);
+      const l = left.translate();
+      const r = right.translate();
+      validateBoolean(l, left.source);
+      validateBoolean(r, right.source);
+      return core.binaryExp(l, "||", r, core.boolType);
     },
 
     Exp2_and(left, _op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      validateBoolean(leftOperand, left.source);
-      validateBoolean(rightOperand, right.source);
-      return core.binaryExp(leftOperand, "&&", rightOperand, core.boolType);
+      const l = left.translate();
+      const r = right.translate();
+      validateBoolean(l, left.source);
+      validateBoolean(r, right.source);
+      return core.binaryExp(l, "&&", r, core.boolType);
     },
 
     Exp3_bitor(left, _op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      validateInteger(leftOperand, left.source);
-      validateInteger(rightOperand, right.source);
-      return core.binaryExp(leftOperand, "|", rightOperand, core.intType);
+      const l = left.translate();
+      const r = right.translate();
+      validateInteger(l, left.source);
+      validateInteger(r, right.source);
+      return core.binaryExp(l, "|", r, core.numberType);
     },
 
     Exp3_bitxor(left, _op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      validateInteger(leftOperand, left.source);
-      validateInteger(rightOperand, right.source);
-      return core.binaryExp(leftOperand, "^", rightOperand, core.intType);
+      const l = left.translate();
+      const r = right.translate();
+      validateInteger(l, left.source);
+      validateInteger(r, right.source);
+      return core.binaryExp(l, "^", r, core.numberType);
     },
 
     Exp3_bitand(left, _op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      validateInteger(leftOperand, left.source);
-      validateInteger(rightOperand, right.source);
-      return core.binaryExp(leftOperand, "&", rightOperand, core.intType);
+      const l = left.translate();
+      const r = right.translate();
+      validateInteger(l, left.source);
+      validateInteger(r, right.source);
+      return core.binaryExp(l, "&", r, core.numberType);
     },
 
     Exp4_compare(left, op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      return core.binaryExp(leftOperand, op.sourceString, rightOperand, core.boolType);
+      const l = left.translate();
+      const r = right.translate();
+      const operator = op.sourceString;
+      if (operator === "==" || operator === "!=") {
+        validate(
+          areCompatible(l.type, r.type),
+          "Types must match for comparison",
+          op.source,
+        );
+      } else {
+        validateNumber(l, left.source);
+        validateNumber(r, right.source);
+      }
+      return core.binaryExp(l, operator, r, core.boolType);
     },
 
     Exp5_shift(left, op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      validateInteger(leftOperand, left.source);
-      validateInteger(rightOperand, right.source);
-      return core.binaryExp(leftOperand, op.sourceString, rightOperand, core.intType);
+      const l = left.translate();
+      const r = right.translate();
+      validateInteger(l, left.source);
+      validateInteger(r, right.source);
+      return core.binaryExp(l, op.sourceString, r, core.numberType);
     },
 
     Exp6_add(left, op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      return core.binaryExp(leftOperand, op.sourceString, rightOperand, core.numberType);
+      const l = left.translate();
+      const r = right.translate();
+      const operator = op.sourceString;
+      if (
+        operator === "+" &&
+        (l.type === core.stringType || r.type === core.stringType)
+      ) {
+        return core.binaryExp(l, operator, r, core.stringType);
+      }
+      validateNumber(l, left.source);
+      validateNumber(r, right.source);
+      return core.binaryExp(l, operator, r, core.numberType);
     },
 
     Exp7_multiply(left, op, right) {
-      const leftOperand = left.translate();
-      const rightOperand = right.translate();
-      const operator = op.sourceString === "fanum_tax" ? "*" : op.sourceString === "mog" ? "/" : "%";
-      return core.binaryExp(leftOperand, operator, rightOperand, core.numberType);
+      const l = left.translate();
+      const r = right.translate();
+      const operator =
+        op.sourceString === "fanum_tax"
+          ? "*"
+          : op.sourceString === "mog"
+            ? "/"
+            : "%";
+      validateNumber(l, left.source);
+      validateNumber(r, right.source);
+      return core.binaryExp(l, operator, r, core.numberType);
     },
 
     Exp8_power(left, _op, right) {
-      const baseValue = left.translate();
-      const exponentValue = right.translate();
-      return core.binaryExp(baseValue, "**", exponentValue, core.numberType);
+      const l = left.translate();
+      const r = right.translate();
+      validateNumber(l, left.source);
+      validateNumber(r, right.source);
+      return core.binaryExp(l, "**", r, core.numberType);
     },
 
     Exp8_unary(op, operand) {
       const opValue = operand.translate();
       const operator = op.sourceString;
-      if (operator === "-" || operator === "#" || operator === "random") {
+      if (operator === "-") {
+        validateNumber(opValue, op.source);
+        return core.unaryExp(operator, opValue, opValue.type);
+      }
+      if (operator === "#") {
+        validate(
+          opValue.type?.kind === "ArrayType" ||
+            opValue.type === core.stringType,
+          "Expected an array or string",
+          op.source,
+        );
         return core.unaryExp(operator, opValue, core.numberType);
       }
+      if (operator === "random") {
+        validateNumber(opValue, op.source);
+        return core.unaryExp(operator, opValue, core.numberType);
+      }
+      if (operator === "some") {
+        return core.unaryExp(
+          operator,
+          opValue,
+          core.optionalType(opValue.type),
+        );
+      }
+      // Must be "!"
+      validateBoolean(opValue, op.source);
       return core.unaryExp(operator, opValue, core.boolType);
     },
 
     Primary_emptyopt(_mid, type) {
-      return core.literal(null, type.translate());
+      return core.literal(null, core.optionalType(type.translate()));
     },
 
     Primary_spawn(_spawn, id, _open, args, _close) {
       const aura = context.get(id.sourceString, id.source);
-      validate(aura.kind === "StructDeclaration", `Identifier ${id.sourceString} is not an aura`, id.source);
+      validate(
+        aura.kind === "StructDeclaration",
+        `Identifier ${id.sourceString} is not an aura`,
+        id.source,
+      );
       const argValues = args.asIteration().children.map((a) => a.translate());
       validateArgumentsMatchParameters(argValues, aura.fields, args.source);
-      return core.constructorCall(aura, argValues);
+      const call = core.constructorCall(aura, argValues);
+      call.type = aura;
+      return call;
     },
 
     Primary_call(callee, _open, args, _close) {
       const func = callee.translate();
       validateIsFunction(func, callee.source);
       const argValues = args.asIteration().children.map((a) => a.translate());
-      validateArgumentsMatchParameters(argValues, func.params, args.source);
-      return core.call(func, argValues);
+      const targetType = func.type?.kind === "FunctionType" ? func.type : func;
+      validateArgumentsMatchParameters(argValues, targetType, args.source);
+      const call = core.call(func, argValues);
+      call.type = targetType.returnType;
+      return call;
     },
 
     Primary_subscript(array, _open, index, _close) {
       const arrayExp = array.translate();
-      return core.subscript(arrayExp, index.translate());
+      validate(
+        arrayExp.type?.kind === "ArrayType",
+        "Expected an array",
+        array.source,
+      );
+      const subscript = core.subscript(arrayExp, index.translate());
+      subscript.type = arrayExp.type.baseType;
+      return subscript;
     },
 
     Primary_member(object, op, id) {
       const objExp = object.translate();
-      return core.member(objExp, op.sourceString, id.translate());
+      const fieldName = id.translate();
+      const type =
+        objExp.type?.kind === "OptionalType"
+          ? objExp.type.baseType
+          : objExp.type;
+      validate(type?.fields, "Not a struct", object.source);
+      const field = type.fields.find((f) => f.name === fieldName);
+      validate(field, `No such field: ${fieldName}`, id.source);
+      const member = core.member(objExp, op.sourceString, field);
+      member.type = field.type;
+      return member;
     },
 
     Primary_id(id) {
@@ -448,11 +785,11 @@ export default function translate(match) {
     },
 
     intlit(_) {
-      return core.literal(parseInt(this.sourceString), core.intType);
+      return core.literal(parseInt(this.sourceString), core.numberType);
     },
 
     floatlit(_whole, _dot, _fraction, _e, _sign, _exponent) {
-      return core.literal(parseFloat(this.sourceString), core.floatType);
+      return core.literal(parseFloat(this.sourceString), core.numberType);
     },
 
     stringlit(_open, _chars, _close) {
@@ -464,5 +801,8 @@ export default function translate(match) {
     },
   };
 
-  return grammar.createSemantics().addOperation("translate", actions)(match).translate();
+  return grammar
+    .createSemantics()
+    .addOperation("translate", actions)(match)
+    .translate();
 }

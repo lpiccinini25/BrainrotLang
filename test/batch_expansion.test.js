@@ -98,4 +98,14 @@ describe("Batch Semantic Error Tests", () => {
     "lowkey x = # [1, 2];",
     "lowkey x = # \"hi\";",
   ];
-... (11 lines left)
+
+
+  it("validates batch semantic rules", () => {
+    errors.forEach(([source, error]) => {
+      expect(() => compile(`lowkey x = ${source};`)).toThrow(error);
+    });
+    validCases.forEach(source => {
+      expect(() => compile(source)).not.toThrow();
+    });
+  });
+});

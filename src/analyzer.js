@@ -33,8 +33,9 @@ function validateInteger(e, at) {
   );
 }
 
-function areCompatible(t1, t2) {
+export function areCompatible(t1, t2) {
   if (t1 === t2) return true;
+  
   if (t1 === core.anyType || t2 === core.anyType) return true;
   if (t1?.kind === "ArrayType" && t2?.kind === "ArrayType") {
     return areCompatible(t1.baseType, t2.baseType);
@@ -52,8 +53,10 @@ function areCompatible(t1, t2) {
   return false;
 }
 
-function typeName(t) {
+export function typeName(t) {
+  
   if (!t || t === core.voidType) return "void";
+  
   if (typeof t === "string") return t;
   if (t.kind === "ArrayType") return `[${typeName(t.baseType)}]`;
   if (t.kind === "OptionalType") return `${typeName(t.baseType)}?`;
@@ -65,8 +68,9 @@ function typeName(t) {
   if (t.kind === "StructDeclaration") return t.name;
   if (t === core.numberType) return "sigma";
   if (t === core.boolType) return "rizz";
+  
   if (t === core.stringType) return "string";
-  /* istanbul ignore next */
+  
   return t.kind || t.name || "unknown";
 }
 
@@ -90,7 +94,8 @@ function validateNotReadOnly(e, at) {
   validate(!e.readOnly, `Cannot reassign to a locked_in variable, mid.`, at);
 }
 
-function validateArgumentsMatchParameters(args, targetType, at) {
+export function validateArgumentsMatchParameters(args, targetType, at) {
+  
   const paramTypes =
     targetType.kind === "FunctionType"
       ? targetType.parameterTypes
@@ -110,10 +115,11 @@ function validateArgumentsMatchParameters(args, targetType, at) {
   });
 }
 
-function typeOf(node) {
+export function typeOf(node) {
   if (node.type) return node.type;
+  
   if (node.kind === "IfStatement") return typeOf(node.consequent);
-  /* istanbul ignore next */
+  
   return core.anyType;
 }
 
@@ -305,8 +311,10 @@ export default function translate(match) {
       const typeName = id.translate();
       const typeMap = {
         sigma: core.numberType,
+        int: core.numberType,
         rizz: core.boolType,
         void: core.voidType,
+        string: core.stringType,
       };
       if (typeMap[typeName]) return typeMap[typeName];
       return context.get(typeName, id.source);
@@ -577,7 +585,9 @@ export default function translate(match) {
       const func = callee.translate();
       validateIsFunction(func, callee.source);
       const argValues = args.asIteration().children.map((a) => a.translate());
-      const targetType = func.type?.kind === "FunctionType" ? func.type : func;
+      const targetType =
+        
+        func.type?.kind === "FunctionType" ? func.type : func;
       validateArgumentsMatchParameters(argValues, targetType, args.source);
       const call = core.call(func, argValues);
       call.type = targetType.returnType;
@@ -621,7 +631,9 @@ export default function translate(match) {
 
     Primary_arrayexp(_open, elements, _close) {
       const items = elements.asIteration().children.map((e) => e.translate());
-      const baseType = items.length > 0 ? items[0].type : core.anyType;
+      const baseType =
+        
+        items.length > 0 ? items[0].type : core.anyType;
       return core.literal(items, core.arrayType(baseType));
     },
 

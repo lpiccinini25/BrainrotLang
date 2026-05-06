@@ -5,8 +5,8 @@
     "main": "src/compiler.js",
     "type": "module",
     "scripts": {
-      "test": "jest",
-      "test:watch": "jest --watchAll",
+      "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+      "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll",
       "format": "prettier --write .",
       "lint": "prettier --check ."
     },

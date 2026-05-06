@@ -33,7 +33,8 @@ describe("Batch Optimizer and Generator Coverage", () => {
 
   it("covers all control flow patterns in generator", () => {
     const source = `
-      vibe_check no_cap {
+      lowkey b = no_cap;
+      vibe_check b {
         yap(1);
       } caught_lackin vibe_check cap {
         yap(2);
@@ -58,7 +59,7 @@ describe("Batch Optimizer and Generator Coverage", () => {
       }
     `;
     const js = compile(source, "js");
-    expect(js).toContain("if (true)");
+    expect(js).toContain("if (b)");
     expect(js).toContain("else {");
     expect(js).toContain("while (false)");
     expect(js).toContain("for (let _i = 0; _i < 5; _i++)");

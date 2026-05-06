@@ -24,8 +24,9 @@ describe("The Optimizer and Generator", () => {
 
   it("generates loops and conditionals", () => {
     const source = `
+      lowkey b = no_cap;
       run_it_back 5 {
-        vibe_check no_cap { yap(1); } caught_lackin { yap(0); }
+        vibe_check b { yap(1); } caught_lackin { yap(0); }
       }
       go_go_go cap {
         skedaddle;
@@ -34,7 +35,7 @@ describe("The Optimizer and Generator", () => {
     const jsCode = compile(source, "js");
     expect(jsCode).toContain("for (let _i = 0; _i < 5; _i++) {");
     expect(jsCode).toContain(
-      "if (true) { console.log(1); } else { console.log(0); }",
+      "if (b) { console.log(1); } else { console.log(0); }",
     );
     expect(jsCode).toContain("while (false) { break; }");
   });

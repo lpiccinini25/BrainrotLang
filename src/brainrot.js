@@ -10,9 +10,11 @@ Usage:
   brainrot <file> <outputType>
 
 Output types:
-  ast        Print the abstract syntax tree
-  optimized  Print the optimized AST
-  js         Generate JavaScript code
+  syntax     Check for syntax errors and stop
+  parse      Print the raw Ohm match object
+  analyze    Check syntax and semantics, then print analyzed AST
+  optimized  Perform constant folding and print optimized AST
+  js         Generate and print JavaScript code
 `;
 
 async function main() {
@@ -22,7 +24,7 @@ async function main() {
   }
 
   const filename = process.argv[2];
-  const outputType = process.argv[3] || "ast";
+  const outputType = process.argv[3] || "analyze";
 
   try {
     const source = await fs.readFile(filename, "utf8");

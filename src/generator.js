@@ -43,11 +43,13 @@ export default function generate(program) {
       return `{ ${properties.join(", ")} }`;
     },
     IfStatement(s) {
+      
       const block = Array.isArray(s.consequent)
         ? s.consequent.map(gen).join("\n")
         : gen(s.consequent);
       let output = `if (${gen(s.test)}) { ${block} }`;
       if (s.alternate) {
+        
         const altBlock = Array.isArray(s.alternate)
           ? s.alternate.map(gen).join("\n")
           : gen(s.alternate);
@@ -67,6 +69,9 @@ export default function generate(program) {
     },
     ForCollectionStatement(s) {
       return `for (let ${s.iterator.name} of ${gen(s.collection)}) { ${s.body.map(gen).join("\n")} }`;
+    },
+    ConditionalExpression(e) {
+      return `(${gen(e.test)} ? ${gen(e.consequent)} : ${gen(e.alternate)})`;
     },
     FunctionDeclaration(d) {
       const params = d.fun.params.map(gen).join(", ");

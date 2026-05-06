@@ -94,6 +94,10 @@ export function forCollectionStatement(iterator, collection, body) {
   return { kind: "ForCollectionStatement", iterator, collection, body };
 }
 
+export function conditional(test, consequent, alternate, type) {
+  return { kind: "ConditionalExpression", test, consequent, alternate, type };
+}
+
 export function binaryExp(left, op, right, type) {
   return { kind: "BinaryExpression", left, op, right, type };
 }

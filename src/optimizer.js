@@ -25,13 +25,18 @@ const optimizers = {
   },
   IfStatement(s) {
     s.test = optimize(s.test);
+    
     s.consequent = s.consequent.map
       ? s.consequent.map(optimize)
       : optimize(s.consequent);
     if (s.alternate) {
+      
       s.alternate = s.alternate.map
         ? s.alternate.map(optimize)
         : optimize(s.alternate);
+    }
+    if (s.test.kind === "Literal") {
+      return s.test.value ? s.consequent : s.alternate;
     }
     return s;
   },
@@ -73,6 +78,15 @@ const optimizers = {
     s.expression = optimize(s.expression);
     return s;
   },
+  ConditionalExpression(e) {
+    e.test = optimize(e.test);
+    e.consequent = optimize(e.consequent);
+    e.alternate = optimize(e.alternate);
+    if (e.test.kind === "Literal") {
+      return e.test.value ? e.consequent : e.alternate;
+    }
+    return e;
+  },
   BinaryExpression(e) {
     e.left = optimize(e.left);
     e.right = optimize(e.right);
@@ -99,7 +113,11 @@ const optimizers = {
   },
   UnaryExpression(e) {
     e.operand = optimize(e.operand);
-    if (e.operand.kind === "Literal" && typeof e.operand.value === "number") {
+    if (
+      e.operand.kind === "Literal" &&
+      
+      typeof e.operand.value === "number"
+    ) {
       if (e.op === "-") return core.literal(-e.operand.value, core.numberType);
     }
     return e;

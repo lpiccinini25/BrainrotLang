@@ -1,0 +1,10 @@
+cook fibonacci(n: sigma): sigma {
+  vibe_check n <= 1 {
+    it_gave n;
+  }
+  it_gave fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+lowkey result = fibonacci(10);
+yap("Fibonacci(10): ");
+yap(result);

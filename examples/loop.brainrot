@@ -1,0 +1,15 @@
+yap("Range loop:");
+grind i with 1...5 {
+  yap(i);
+}
+
+yap("Collection loop:");
+lowkey numbers = [10, 20, 30, 40, 50];
+grind n with numbers {
+  yap(n);
+}
+
+yap("Repeat loop:");
+run_it_back 3 {
+  yap("Chungus!");
+}
